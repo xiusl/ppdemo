@@ -1,0 +1,22 @@
+PODS:
+  - SDWebImage (5.9.1):
+    - SDWebImage/Core (= 5.9.1)
+  - SDWebImage/Core (5.9.1)
+  - TZImagePickerController (3.4.2)
+
+DEPENDENCIES:
+  - SDWebImage
+  - TZImagePickerController
+
+SPEC REPOS:
+  trunk:
+    - SDWebImage
+    - TZImagePickerController
+
+SPEC CHECKSUMS:
+  SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
+  TZImagePickerController: cc0b74d5f01ab4cddcc24dcdfc3c7d68e6261056
+
+PODFILE CHECKSUM: f3bbb6e1c1a242d70ea90f88dfde13a5182863cb
+
+COCOAPODS: 1.9.3

@@ -1,0 +1,490 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BA744869845E15172D6BB34B /* Pods_LKPhotoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DED5215A34FDEDCB318D508A /* Pods_LKPhotoKit.framework */; };
+		BDDFD3A32542A705009B90FA /* LkFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFD3A22542A705009B90FA /* LkFileManager.swift */; };
+		BDDFD3A72542C0CE009B90FA /* LkSomeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */; };
+		BDE5F5FB25415475003FBC50 /* LKPhotoPicker.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BDE5F5FA25415475003FBC50 /* LKPhotoPicker.bundle */; };
+		BDE5F60825415FE9003FBC50 /* EyuWorkPhotoCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE5F60725415FE9003FBC50 /* EyuWorkPhotoCropViewController.swift */; };
+		BDE5F60C254166FE003FBC50 /* EyuWorkPhotoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE5F60B254166FE003FBC50 /* EyuWorkPhotoEditViewController.swift */; };
+		BDE5F61025417C62003FBC50 /* EyuWorkPhotoEidtBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE5F60F25417C62003FBC50 /* EyuWorkPhotoEidtBottomView.swift */; };
+		BDE9169A254006570013888B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE91699254006570013888B /* AppDelegate.swift */; };
+		BDE9169E254006570013888B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE9169D254006570013888B /* ViewController.swift */; };
+		BDE916A1254006570013888B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE9169F254006570013888B /* Main.storyboard */; };
+		BDE916A3254006580013888B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDE916A2254006580013888B /* Assets.xcassets */; };
+		BDE916A6254006580013888B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDE916A4254006580013888B /* LaunchScreen.storyboard */; };
+		BDE916B5254006830013888B /* LKPhotoCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916AF254006830013888B /* LKPhotoCropView.swift */; };
+		BDE916B6254006830013888B /* LKPhotoPreviewViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916B0254006830013888B /* LKPhotoPreviewViewCell.swift */; };
+		BDE916B7254006830013888B /* LKPhotoCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916B1254006830013888B /* LKPhotoCropViewController.swift */; };
+		BDE916B8254006830013888B /* LKAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916B2254006830013888B /* LKAlbum.swift */; };
+		BDE916B9254006830013888B /* LKPhotoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916B3254006830013888B /* LKPhotoViewCell.swift */; };
+		BDE916BA254006830013888B /* LKPhotoPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916B4254006830013888B /* LKPhotoPickerViewController.swift */; };
+		BDE916BF254006B80013888B /* ColorUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916BE254006B80013888B /* ColorUtil.swift */; };
+		BDE916C3254008C60013888B /* EyuCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE916C2254008C60013888B /* EyuCameraViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6BC570864E9360F6D272F787 /* Pods-LKPhotoKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LKPhotoKit.debug.xcconfig"; path = "Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit.debug.xcconfig"; sourceTree = "<group>"; };
+		84B7B2AE29A09703F21315DD /* Pods-LKPhotoKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LKPhotoKit.release.xcconfig"; path = "Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit.release.xcconfig"; sourceTree = "<group>"; };
+		BDDFD3A22542A705009B90FA /* LkFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LkFileManager.swift; sourceTree = "<group>"; };
+		BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LkSomeEx.swift; sourceTree = "<group>"; };
+		BDE5F5FA25415475003FBC50 /* LKPhotoPicker.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LKPhotoPicker.bundle; sourceTree = "<group>"; };
+		BDE5F60425415E1C003FBC50 /* Bridge-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridge-Header.h"; sourceTree = "<group>"; };
+		BDE5F60725415FE9003FBC50 /* EyuWorkPhotoCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EyuWorkPhotoCropViewController.swift; sourceTree = "<group>"; };
+		BDE5F60B254166FE003FBC50 /* EyuWorkPhotoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EyuWorkPhotoEditViewController.swift; sourceTree = "<group>"; };
+		BDE5F60F25417C62003FBC50 /* EyuWorkPhotoEidtBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EyuWorkPhotoEidtBottomView.swift; sourceTree = "<group>"; };
+		BDE91696254006570013888B /* LKPhotoKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LKPhotoKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDE91699254006570013888B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BDE9169D254006570013888B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		BDE916A0254006570013888B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BDE916A2254006580013888B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BDE916A5254006580013888B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BDE916A7254006580013888B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BDE916AF254006830013888B /* LKPhotoCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LKPhotoCropView.swift; sourceTree = "<group>"; };
+		BDE916B0254006830013888B /* LKPhotoPreviewViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LKPhotoPreviewViewCell.swift; sourceTree = "<group>"; };
+		BDE916B1254006830013888B /* LKPhotoCropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LKPhotoCropViewController.swift; sourceTree = "<group>"; };
+		BDE916B2254006830013888B /* LKAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LKAlbum.swift; sourceTree = "<group>"; };
+		BDE916B3254006830013888B /* LKPhotoViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LKPhotoViewCell.swift; sourceTree = "<group>"; };
+		BDE916B4254006830013888B /* LKPhotoPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LKPhotoPickerViewController.swift; sourceTree = "<group>"; };
+		BDE916BE254006B80013888B /* ColorUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorUtil.swift; sourceTree = "<group>"; };
+		BDE916C2254008C60013888B /* EyuCameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EyuCameraViewController.swift; sourceTree = "<group>"; };
+		DED5215A34FDEDCB318D508A /* Pods_LKPhotoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LKPhotoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BDE91693254006570013888B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA744869845E15172D6BB34B /* Pods_LKPhotoKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		377924B0753D76E2A968BF9F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DED5215A34FDEDCB318D508A /* Pods_LKPhotoKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		709BAE57A824A1F572F91E50 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6BC570864E9360F6D272F787 /* Pods-LKPhotoKit.debug.xcconfig */,
+				84B7B2AE29A09703F21315DD /* Pods-LKPhotoKit.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		BDE9168D254006570013888B = {
+			isa = PBXGroup;
+			children = (
+				BDE91698254006570013888B /* LKPhotoKit */,
+				BDE91697254006570013888B /* Products */,
+				709BAE57A824A1F572F91E50 /* Pods */,
+				377924B0753D76E2A968BF9F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		BDE91697254006570013888B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BDE91696254006570013888B /* LKPhotoKit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BDE91698254006570013888B /* LKPhotoKit */ = {
+			isa = PBXGroup;
+			children = (
+				BDE91699254006570013888B /* AppDelegate.swift */,
+				BDE9169D254006570013888B /* ViewController.swift */,
+				BDE9169F254006570013888B /* Main.storyboard */,
+				BDE916A2254006580013888B /* Assets.xcassets */,
+				BDE916A4254006580013888B /* LaunchScreen.storyboard */,
+				BDE916A7254006580013888B /* Info.plist */,
+				BDE916C2254008C60013888B /* EyuCameraViewController.swift */,
+				BDE5F60725415FE9003FBC50 /* EyuWorkPhotoCropViewController.swift */,
+				BDE5F60B254166FE003FBC50 /* EyuWorkPhotoEditViewController.swift */,
+				BDE5F60F25417C62003FBC50 /* EyuWorkPhotoEidtBottomView.swift */,
+				BDE5F60425415E1C003FBC50 /* Bridge-Header.h */,
+				BDDFD3A22542A705009B90FA /* LkFileManager.swift */,
+				BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */,
+				BDE916AE254006830013888B /* PhotoPicker */,
+			);
+			path = LKPhotoKit;
+			sourceTree = "<group>";
+		};
+		BDE916AE254006830013888B /* PhotoPicker */ = {
+			isa = PBXGroup;
+			children = (
+				BDE916BD254006A10013888B /* Extend */,
+				BDE916AF254006830013888B /* LKPhotoCropView.swift */,
+				BDE916B0254006830013888B /* LKPhotoPreviewViewCell.swift */,
+				BDE916B1254006830013888B /* LKPhotoCropViewController.swift */,
+				BDE916B2254006830013888B /* LKAlbum.swift */,
+				BDE916B3254006830013888B /* LKPhotoViewCell.swift */,
+				BDE916B4254006830013888B /* LKPhotoPickerViewController.swift */,
+				BDE5F5FA25415475003FBC50 /* LKPhotoPicker.bundle */,
+			);
+			path = PhotoPicker;
+			sourceTree = "<group>";
+		};
+		BDE916BD254006A10013888B /* Extend */ = {
+			isa = PBXGroup;
+			children = (
+				BDE916BE254006B80013888B /* ColorUtil.swift */,
+			);
+			path = Extend;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BDE91695254006570013888B /* LKPhotoKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDE916AA254006580013888B /* Build configuration list for PBXNativeTarget "LKPhotoKit" */;
+			buildPhases = (
+				B0BBC139A523CF6FC64D3E77 /* [CP] Check Pods Manifest.lock */,
+				BDE91692254006570013888B /* Sources */,
+				BDE91693254006570013888B /* Frameworks */,
+				BDE91694254006570013888B /* Resources */,
+				FB8003C20F7BF7E82BB2EB61 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LKPhotoKit;
+			productName = LKPhotoKit;
+			productReference = BDE91696254006570013888B /* LKPhotoKit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BDE9168E254006570013888B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1200;
+				LastUpgradeCheck = 1200;
+				TargetAttributes = {
+					BDE91695254006570013888B = {
+						CreatedOnToolsVersion = 12.0;
+					};
+				};
+			};
+			buildConfigurationList = BDE91691254006570013888B /* Build configuration list for PBXProject "LKPhotoKit" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BDE9168D254006570013888B;
+			productRefGroup = BDE91697254006570013888B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BDE91695254006570013888B /* LKPhotoKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BDE91694254006570013888B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDE916A6254006580013888B /* LaunchScreen.storyboard in Resources */,
+				BDE916A3254006580013888B /* Assets.xcassets in Resources */,
+				BDE916A1254006570013888B /* Main.storyboard in Resources */,
+				BDE5F5FB25415475003FBC50 /* LKPhotoPicker.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B0BBC139A523CF6FC64D3E77 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LKPhotoKit-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FB8003C20F7BF7E82BB2EB61 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BDE91692254006570013888B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDE916B7254006830013888B /* LKPhotoCropViewController.swift in Sources */,
+				BDE916B5254006830013888B /* LKPhotoCropView.swift in Sources */,
+				BDDFD3A32542A705009B90FA /* LkFileManager.swift in Sources */,
+				BDE9169E254006570013888B /* ViewController.swift in Sources */,
+				BDE916BF254006B80013888B /* ColorUtil.swift in Sources */,
+				BDE5F60C254166FE003FBC50 /* EyuWorkPhotoEditViewController.swift in Sources */,
+				BDE5F60825415FE9003FBC50 /* EyuWorkPhotoCropViewController.swift in Sources */,
+				BDDFD3A72542C0CE009B90FA /* LkSomeEx.swift in Sources */,
+				BDE916BA254006830013888B /* LKPhotoPickerViewController.swift in Sources */,
+				BDE9169A254006570013888B /* AppDelegate.swift in Sources */,
+				BDE916C3254008C60013888B /* EyuCameraViewController.swift in Sources */,
+				BDE916B9254006830013888B /* LKPhotoViewCell.swift in Sources */,
+				BDE5F61025417C62003FBC50 /* EyuWorkPhotoEidtBottomView.swift in Sources */,
+				BDE916B6254006830013888B /* LKPhotoPreviewViewCell.swift in Sources */,
+				BDE916B8254006830013888B /* LKAlbum.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		BDE9169F254006570013888B /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BDE916A0254006570013888B /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		BDE916A4254006580013888B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BDE916A5254006580013888B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BDE916A8254006580013888B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BDE916A9254006580013888B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BDE916AB254006580013888B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BC570864E9360F6D272F787 /* Pods-LKPhotoKit.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KXJSQ7VQ52;
+				INFOPLIST_FILE = LKPhotoKit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ampixel.LKPhotoKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LKPhotoKit/Bridge-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BDE916AC254006580013888B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 84B7B2AE29A09703F21315DD /* Pods-LKPhotoKit.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KXJSQ7VQ52;
+				INFOPLIST_FILE = LKPhotoKit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ampixel.LKPhotoKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LKPhotoKit/Bridge-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BDE91691254006570013888B /* Build configuration list for PBXProject "LKPhotoKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDE916A8254006580013888B /* Debug */,
+				BDE916A9254006580013888B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDE916AA254006580013888B /* Build configuration list for PBXNativeTarget "LKPhotoKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDE916AB254006580013888B /* Debug */,
+				BDE916AC254006580013888B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BDE9168E254006570013888B /* Project object */;
+}
