@@ -21,6 +21,14 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonClickAction), for: .touchUpInside)
         view.addSubview(button)
         
+        
+        let button2 = UIButton()
+        button2.frame = CGRect(x: 100, y: 160, width: 80, height: 40)
+        button2.setTitle("拍视频", for: .normal)
+        button2.setTitleColor(.black, for: .normal)
+        button2.addTarget(self, action: #selector(button2ClickAction), for: .touchUpInside)
+        view.addSubview(button2)
+        
         testVersion()
         
         let v = LightProgressControl(frame: CGRect(x: 50, y: 300, width: 300, height: 60))
@@ -29,7 +37,6 @@ class ViewController: UIViewController {
         
         let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         let filePath = cachePath.appending("/work.mp4")
-        let videoUrl = URL(fileURLWithPath: filePath)
         
         print(FileManager.default.fileExists(atPath: filePath))
         if FileManager.default.fileExists(atPath: filePath) {
@@ -84,6 +91,15 @@ class ViewController: UIViewController {
     
     @objc
     func buttonClickAction() {
+        let vc = EyuCameraViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+//        vc.modalPresentationStyle = .fullScreen
+//        self.present(vc, animated: true, completion: nil)
+        
+    }
+    
+    @objc
+    func button2ClickAction() {
         let vc = EyuCameraViewController()
         vc.isVideo = true
         self.navigationController?.pushViewController(vc, animated: true)

@@ -24,7 +24,7 @@ class EyuCameraViewController: UIViewController {
     var videoDataOutput: AVCaptureVideoDataOutput!
     var audioDataOutput: AVCaptureAudioDataOutput!
     let dataOutputQueue = DispatchQueue(label: "com.eyuschool.camera.queue")
-    let dataWriteQueue = DispatchQueue(label: "com.eyuschool.write.queue")
+    let dataWriteQueue = DispatchQueue(label: "com.eyuschool.camera.queue")
     
     var position: AVCaptureDevice.Position = .back
     
@@ -34,10 +34,8 @@ class EyuCameraViewController: UIViewController {
     var animateActivity: Bool = false
     var takePhoto: Bool = false
     var recording: Bool = false
-    var oldOutput: AVCaptureVideoDataOutput?
-    var deviceInput: AVCaptureDeviceInput?
     
-    
+    var recordTime = 0.0
     
     
     
@@ -46,6 +44,8 @@ class EyuCameraViewController: UIViewController {
     var assetWriterVideoInput: AVAssetWriterInput?
     var assetWriterAudioInput: AVAssetWriterInput?
     
+    
+    var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,7 +77,7 @@ class EyuCameraViewController: UIViewController {
     }
     
     func configSession() {
-        captureSession.sessionPreset = AVCaptureSession.Preset.photo
+        captureSession.sessionPreset = AVCaptureSession.Preset.high
         
     }
     func setupPreviewLayer() {
@@ -94,6 +94,7 @@ class EyuCameraViewController: UIViewController {
         bottomView.addSubview(selectPhotoButton)
         bottomView.addSubview(swapCameraButton)
         bottomView.addSubview(takePhotoButton)
+        bottomView.addSubview(timeLabel)
     }
     private lazy var bottomView: UIView = {
         let view = UIView()
@@ -127,7 +128,18 @@ class EyuCameraViewController: UIViewController {
         button.addTarget(self, action: #selector(takePhotoAction), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 32
+        button.setTitle(isVideo ? "开始":"拍照", for: .normal)
+        button.setTitle(isVideo ? "完成":"拍照", for: .selected)
         return button
+    }()
+    private lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.frame = CGRect(x: (self.view.frame.size.width-300)*0.5, y: 0, width: 300, height: 20)
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .black
+        label.textAlignment = .center
+        label.isHidden = !isVideo
+        return label
     }()
     
     
@@ -140,8 +152,12 @@ class EyuCameraViewController: UIViewController {
                 if assetWriter == nil {
                     self.setupAssetWriter()
                 }
+                takePhotoButton.isSelected = true
             } else {
+                takePhotoButton.isSelected = false
                 endRecording()
+                self.timer?.invalidate()
+                self.timer = nil
             }
         } else {
             takePhoto = true
@@ -172,9 +188,27 @@ class EyuCameraViewController: UIViewController {
         
     }
     
+    func destroyWrite() {
+        self.assetWriter = nil;
+        self.assetWriterAudioInput = nil;
+        self.assetWriterVideoInput = nil;
+        self.videoUrl = nil;
+        self.recordTime = 0;
+        if self.timer != nil {
+            self.timer?.invalidate()
+            self.timer = nil
+        }
+    }
+    
+    deinit {
+        print("销毁")
+        
+        destroyWrite()
+    }
+    
     
     func swapCamera(to position: AVCaptureDevice.Position) {
-        if let deviceInput = self.deviceInput {
+        if let deviceInput = self.videoDeviceInput {
             captureSession.beginConfiguration()
             captureSession.removeInput(deviceInput)
             
@@ -189,7 +223,7 @@ class EyuCameraViewController: UIViewController {
                 let captureDeviceInput = try AVCaptureDeviceInput(device: captureDevice)
                 if captureSession.canAddInput(captureDeviceInput) {
                     captureSession.addInput(captureDeviceInput)
-                    self.deviceInput = captureDeviceInput
+                    self.videoDeviceInput = captureDeviceInput
                 }
             } catch {
                 print(error.localizedDescription)
@@ -321,7 +355,6 @@ class EyuCameraViewController: UIViewController {
         
         
         self.videoDataOutput = AVCaptureVideoDataOutput()
-        videoDataOutput.videoSettings = [((kCVPixelBufferPixelFormatTypeKey as NSString) as String):NSNumber(value:kCVPixelFormatType_32BGRA)]
         videoDataOutput.alwaysDiscardsLateVideoFrames = true
         
         if captureSession.canAddOutput(videoDataOutput) {
@@ -344,50 +377,35 @@ class EyuCameraViewController: UIViewController {
         do {
             assetWriter = try AVAssetWriter(url: self.videoUrl, fileType: .mp4)
             
-            let videoSetting: [String : Any] = [
+
+            
+            let compressionProperties: Dictionary<String, Any> = [
+                AVVideoAverageBitRateKey: 6.0 * 1280*720,
+                AVVideoExpectedSourceFrameRateKey: 30,
+                AVVideoMaxKeyFrameIntervalKey: 30,
+                AVVideoProfileLevelKey: AVVideoProfileLevelH264BaselineAutoLevel
+            ]
+            let videoSetting: Dictionary<String, Any> = [
                 AVVideoCodecKey: AVVideoCodecH264,
-                AVVideoWidthKey: 320,
-                AVVideoHeightKey: 240,
-                AVVideoCompressionPropertiesKey: [
-                    AVVideoPixelAspectRatioKey: [
-                        AVVideoPixelAspectRatioHorizontalSpacingKey: 1,
-                        AVVideoPixelAspectRatioVerticalSpacingKey: 1
-                    ],
-                    AVVideoMaxKeyFrameIntervalKey: 1,
-                    AVVideoAverageBitRateKey: 1280000
-                ]
+                AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
+                AVVideoWidthKey: 1280*2,
+                AVVideoHeightKey: 720*2,
+                AVVideoCompressionPropertiesKey: compressionProperties
             ]
             
-            let audioSetting: [String: Any] = [
-                AVFormatIDKey: NSNumber(value: kAudioFormatMPEG4AAC),
+            
+            let audioSetting: Dictionary<String, Any> = [
+                AVEncoderBitRatePerChannelKey: 28000,
+                AVFormatIDKey: kAudioFormatMPEG4AAC,
                 AVNumberOfChannelsKey: 1,
                 AVSampleRateKey: 22050
             ]
             
-            //            let compressionProperties: Dictionary<String, Any> = [
-            //                AVVideoAverageBitRateKey: 6.0,
-            //                AVVideoExpectedSourceFrameRateKey: 30,
-            //                AVVideoMaxKeyFrameIntervalKey: 30,
-            //                AVVideoProfileLevelKey: AVVideoProfileLevelH264BaselineAutoLevel
-            //            ]
-            //            let videoCompressionSettings: Dictionary<String, Any> = [
-            //                AVVideoCodecKey: AVVideoCodecH264,
-            //                AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
-            //                AVVideoWidthKey: (UIScreen.main.bounds.size.width),
-            //                AVVideoHeightKey: (UIScreen.main.bounds.size.height - 160),
-            //                AVVideoCompressionPropertiesKey: compressionProperties
-            //            ]
-            
             assetWriterVideoInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSetting)
             assetWriterVideoInput!.expectsMediaDataInRealTime = true
-            //            assetWriterVideoInput.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi * 0.5))
+            assetWriterVideoInput!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi * 0.5))
             
-            //            let audioCompressionSettings: Dictionary<String, Any> = [
-            //                AVEncoderBitRatePerChannelKey: 28000,
-            //                AVFormatIDKey: kAudioFormatMPEG4AAC,
-            //                AVNumberOfChannelsKey: 1,
-            //                AVSampleRateKey: 22050
-            //            ]
+            
             
             assetWriterAudioInput = AVAssetWriterInput(mediaType: .audio, outputSettings: audioSetting)
             assetWriterAudioInput!.expectsMediaDataInRealTime = true
@@ -408,13 +426,18 @@ class EyuCameraViewController: UIViewController {
     }
     
     func endRecording() {
+        self.didEnd = true
         if let assetWriter = self.assetWriter {
             self.dataWriteQueue.async {
+                
                 assetWriter.finishWriting {
                     //                ALAssetsLibrary *lib = [[ALAssetsLibrary alloc] init];
                     //                [lib writeVideoAtPathToSavedPhotosAlbum:weakSelf.videoUrl completionBlock:nil];
                     PHPhotoLibrary.shared().performChanges { [weak self] in
-                        PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: self!.videoUrl)
+//                        PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: self!.videoUrl)
+                        
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: self!.videoUrl)
+                        
                     } completionHandler: { (falg, error) in
                         print("写入相册\(error)")
                     }
@@ -424,6 +447,8 @@ class EyuCameraViewController: UIViewController {
             
         }
     }
+    var canWrite: Bool = false
+    var didEnd: Bool = false
 }
 
 extension EyuCameraViewController  {
@@ -454,6 +479,7 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
             
             self.dataWriteQueue.async {
                 
+                
                 //                objc_sync_enter(self)
                 guard let assetWriter = self.assetWriter else {
                     //                    objc_sync_exit(self)
@@ -468,50 +494,57 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
                     return
                 }
                 
-                if assetWriter.status == .unknown  {
+                objc_sync_enter(self)
+
+                if self.didEnd {
+                    objc_sync_exit(self)
+                    return
+                }
+                objc_sync_exit(self)
+                
+                if !self.canWrite && connection == self.videoDataOutput?.connection(with: .video) {
                     print("开始线程：\(Thread.current)")
                     if assetWriter.startWriting() {
                         assetWriter.startSession(atSourceTime: CMSampleBufferGetPresentationTimeStamp(sampleBuffer))
+                        self.canWrite = true
                     } else {
                         print("开始失败")
                         print(assetWriter.error?.localizedDescription ?? "")
                         //                        objc_sync_exit(self)
                         return
                     }
+                }
+            
+                if let _ = self.timer {
+                    
+                } else {
+                    DispatchQueue.main.async { [self] in
+                        self.timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(updateProgress), userInfo: nil, repeats: true)
+                    }
                     
                 }
-            }
-            
-            
-            
             
             if connection == self.videoDataOutput?.connection(with: .video) {
-                self.dataWriteQueue.async {
-                    if let videoInput = self.assetWriterVideoInput, videoInput.isReadyForMoreMediaData {
+                if let videoInput = self.assetWriterVideoInput, videoInput.isReadyForMoreMediaData {
                         
-                        if videoInput.append(sampleBuffer) {
-                            
-                            print("写入视频线程：\(Thread.current)")
-                        } else {
-                            print("视频写入失败")
-                        }
+                    if videoInput.append(sampleBuffer) {
+                        
+                    } else {
+                        print("视频写入失败")
                         
                     }
+                    
                 }
-                
             } else if connection == self.audioDataOutput?.connection(with: .audio) {
-                self.dataWriteQueue.async {
                     if let audioInput = self.assetWriterAudioInput, audioInput.isReadyForMoreMediaData {
                         if audioInput.append(sampleBuffer) {
                             
-                            print("写入音频线程：\(Thread.current)")
                         } else {
                             print("音频写入失败")
                         }
                     }
-                }
             }
-            
+            }
             //                objc_sync_exit(self)
             
             //            objc_sync_exit(self)
@@ -550,6 +583,7 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
             
         }
     }
+
     
     func getImageFromSampleBuffer(buffer:CMSampleBuffer, orientation: UIImage.Orientation) -> UIImage? {
         if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
@@ -564,6 +598,20 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
             
         }
         return nil
+    }
+    
+    @objc func updateProgress() {
+        if recordTime > 8.0 {
+            // 最长录制时间
+        }
+        
+        recordTime = recordTime + 0.05
+        self.timeLabel.text = formateTime(videocurrent: CGFloat(recordTime))
+    }
+    
+    func formateTime(videocurrent: CGFloat) -> String {
+//        [NSString stringWithFormat:@"%02li:%02li",lround(floor(videocurrent/60.f)),lround(floor(videocurrent/1.f))%60];
+        return String(format: "%02li:%02li", lround(floor(Double(videocurrent)/60.0)),lround(floor(Double(videocurrent)/1.0))%60)
     }
 }
     extension EyuCameraViewController {
