@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		BA744869845E15172D6BB34B /* Pods_LKPhotoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DED5215A34FDEDCB318D508A /* Pods_LKPhotoKit.framework */; };
+		BD660183254A52F900C2B48D /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD660182254A52F800C2B48D /* BaseNavigationViewController.swift */; };
+		BD66018A254A532700C2B48D /* KLTNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD660187254A532700C2B48D /* KLTNavigationController.m */; };
+		BD66018B254A532700C2B48D /* AnimationContoller.m in Sources */ = {isa = PBXBuildFile; fileRef = BD660189254A532700C2B48D /* AnimationContoller.m */; };
+		BD66018E254A546600C2B48D /* WorkUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66018D254A546600C2B48D /* WorkUploadViewController.swift */; };
 		BDDFD3A32542A705009B90FA /* LkFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFD3A22542A705009B90FA /* LkFileManager.swift */; };
 		BDDFD3A72542C0CE009B90FA /* LkSomeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */; };
 		BDE5F5FB25415475003FBC50 /* LKPhotoPicker.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BDE5F5FA25415475003FBC50 /* LKPhotoPicker.bundle */; };
@@ -32,6 +36,12 @@
 /* Begin PBXFileReference section */
 		6BC570864E9360F6D272F787 /* Pods-LKPhotoKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LKPhotoKit.debug.xcconfig"; path = "Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit.debug.xcconfig"; sourceTree = "<group>"; };
 		84B7B2AE29A09703F21315DD /* Pods-LKPhotoKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LKPhotoKit.release.xcconfig"; path = "Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit.release.xcconfig"; sourceTree = "<group>"; };
+		BD660182254A52F800C2B48D /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
+		BD660186254A532700C2B48D /* AnimationContoller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationContoller.h; sourceTree = "<group>"; };
+		BD660187254A532700C2B48D /* KLTNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLTNavigationController.m; sourceTree = "<group>"; };
+		BD660188254A532700C2B48D /* KLTNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLTNavigationController.h; sourceTree = "<group>"; };
+		BD660189254A532700C2B48D /* AnimationContoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationContoller.m; sourceTree = "<group>"; };
+		BD66018D254A546600C2B48D /* WorkUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkUploadViewController.swift; sourceTree = "<group>"; };
 		BDDFD3A22542A705009B90FA /* LkFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LkFileManager.swift; sourceTree = "<group>"; };
 		BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LkSomeEx.swift; sourceTree = "<group>"; };
 		BDE5F5FA25415475003FBC50 /* LKPhotoPicker.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LKPhotoPicker.bundle; sourceTree = "<group>"; };
@@ -86,6 +96,17 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		BD660185254A532700C2B48D /* KLTAnimateNav */ = {
+			isa = PBXGroup;
+			children = (
+				BD660186254A532700C2B48D /* AnimationContoller.h */,
+				BD660187254A532700C2B48D /* KLTNavigationController.m */,
+				BD660188254A532700C2B48D /* KLTNavigationController.h */,
+				BD660189254A532700C2B48D /* AnimationContoller.m */,
+			);
+			path = KLTAnimateNav;
+			sourceTree = "<group>";
+		};
 		BDE9168D254006570013888B = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +134,7 @@
 				BDE916A2254006580013888B /* Assets.xcassets */,
 				BDE916A4254006580013888B /* LaunchScreen.storyboard */,
 				BDE916A7254006580013888B /* Info.plist */,
+				BD66018D254A546600C2B48D /* WorkUploadViewController.swift */,
 				BDE916C2254008C60013888B /* EyuCameraViewController.swift */,
 				BDE5F60725415FE9003FBC50 /* EyuWorkPhotoCropViewController.swift */,
 				BDE5F60B254166FE003FBC50 /* EyuWorkPhotoEditViewController.swift */,
@@ -120,7 +142,9 @@
 				BDE5F60425415E1C003FBC50 /* Bridge-Header.h */,
 				BDDFD3A22542A705009B90FA /* LkFileManager.swift */,
 				BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */,
+				BD660185254A532700C2B48D /* KLTAnimateNav */,
 				BDE916AE254006830013888B /* PhotoPicker */,
+				BD660182254A52F800C2B48D /* BaseNavigationViewController.swift */,
 			);
 			path = LKPhotoKit;
 			sourceTree = "<group>";
@@ -266,10 +290,14 @@
 				BDE916B7254006830013888B /* LKPhotoCropViewController.swift in Sources */,
 				BDE916B5254006830013888B /* LKPhotoCropView.swift in Sources */,
 				BDDFD3A32542A705009B90FA /* LkFileManager.swift in Sources */,
+				BD66018A254A532700C2B48D /* KLTNavigationController.m in Sources */,
+				BD660183254A52F900C2B48D /* BaseNavigationViewController.swift in Sources */,
 				BDE9169E254006570013888B /* ViewController.swift in Sources */,
+				BD66018E254A546600C2B48D /* WorkUploadViewController.swift in Sources */,
 				BDE916BF254006B80013888B /* ColorUtil.swift in Sources */,
 				BDE5F60C254166FE003FBC50 /* EyuWorkPhotoEditViewController.swift in Sources */,
 				BDE5F60825415FE9003FBC50 /* EyuWorkPhotoCropViewController.swift in Sources */,
+				BD66018B254A532700C2B48D /* AnimationContoller.m in Sources */,
 				BDDFD3A72542C0CE009B90FA /* LkSomeEx.swift in Sources */,
 				BDE916BA254006830013888B /* LKPhotoPickerViewController.swift in Sources */,
 				BDE9169A254006570013888B /* AppDelegate.swift in Sources */,

@@ -47,6 +47,17 @@ class EyuCameraViewController: UIViewController {
     
     var timer: Timer?
     
+    var navBarBgView: UIView?
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navBarBgView = self.navigationController?.navigationBar.subviews.first
+        navBarBgView?.alpha = 0
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navBarBgView?.alpha = 1
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -94,7 +105,7 @@ class EyuCameraViewController: UIViewController {
         bottomView.addSubview(selectPhotoButton)
         bottomView.addSubview(swapCameraButton)
         bottomView.addSubview(takePhotoButton)
-        bottomView.addSubview(timeLabel)
+        bottomView.addSubview(guideButton)
     }
     private lazy var bottomView: UIView = {
         let view = UIView()
@@ -132,14 +143,15 @@ class EyuCameraViewController: UIViewController {
         button.setTitle(isVideo ? "完成":"拍照", for: .selected)
         return button
     }()
-    private lazy var timeLabel: UILabel = {
-        let label = UILabel()
-        label.frame = CGRect(x: (self.view.frame.size.width-300)*0.5, y: 0, width: 300, height: 20)
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .black
-        label.textAlignment = .center
-        label.isHidden = !isVideo
-        return label
+    private lazy var guideButton: UIButton = {
+        let button = UIButton()
+        button.frame = CGRect(x: (self.view.frame.size.width-400)*0.5, y: 20, width: 400, height: 20)
+        button.titleLabel?.font = .systemFont(ofSize: 14)
+        button.setTitleColor(UIColor(red: 36/255.0, green: 38/255.0, blue: 41/255.0, alpha: 1), for: .normal)
+        button.setImage(UIImage(named: "camera_guide"), for: .normal)
+        button.setTitle(isVideo ? "拍个小视频介绍你的作品故事吧～" : "拍一张作品给老师吧～", for: .normal)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 0)
+        return button
     }()
     
     
@@ -439,7 +451,7 @@ class EyuCameraViewController: UIViewController {
                         PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: self!.videoUrl)
                         
                     } completionHandler: { (falg, error) in
-                        print("写入相册\(error)")
+                        print("写入相册\(String(describing: error))")
                     }
                     
                 }
@@ -606,7 +618,8 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
         }
         
         recordTime = recordTime + 0.05
-        self.timeLabel.text = formateTime(videocurrent: CGFloat(recordTime))
+//        self.timeLabel.text = formateTime(videocurrent: CGFloat(recordTime))
+        self.guideButton.setTitle(formateTime(videocurrent: CGFloat(recordTime)), for: .normal)
     }
     
     func formateTime(videocurrent: CGFloat) -> String {

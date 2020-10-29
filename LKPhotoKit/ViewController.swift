@@ -29,6 +29,15 @@ class ViewController: UIViewController {
         button2.addTarget(self, action: #selector(button2ClickAction), for: .touchUpInside)
         view.addSubview(button2)
         
+        
+        let button3 = UIButton()
+        button3.frame = CGRect(x: 100, y: 220, width: 80, height: 40)
+        button3.backgroundColor = .lightGray
+        button3.setTitle("上传作品", for: .normal)
+        button3.setTitleColor(.black, for: .normal)
+        button3.addTarget(self, action: #selector(button3ClickAction), for: .touchUpInside)
+        view.addSubview(button3)
+        
         testVersion()
         
         let v = LightProgressControl(frame: CGRect(x: 50, y: 300, width: 300, height: 60))
@@ -52,6 +61,12 @@ class ViewController: UIViewController {
             }
         }
         
+    }
+
+    @objc
+    func button3ClickAction() {
+        let vc = EyuCameraViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func testVersion() {

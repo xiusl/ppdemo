@@ -15,7 +15,10 @@ class EyuWorkPhotoEditViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor(red: 241/255.0, green: 241/255.0, blue: 245/255.0, alpha: 1)
+        title = "装裱"
         
+        let navRightItem = UIBarButtonItem(title: "下一步", style: .plain, target: self, action: #selector(navRightAction))
+        self.navigationController?.navigationItem.rightBarButtonItem = navRightItem
         
         let imageSize = image.size
         
@@ -32,9 +35,12 @@ class EyuWorkPhotoEditViewController: UIViewController {
         }
         
         
+        let topH = UIApplication.shared.statusBarFrame.size.height + 44
+        let viewH = self.view.frame.size.height - topH - bottomView.frame.size.height
+        
         
         view.addSubview(sideView)
-        sideView.frame = CGRect(x: 50, y: (self.view.frame.size.height-h2)*0.5, width: w2, height: h2)
+        sideView.frame = CGRect(x: 50, y: (viewH-h2)*0.5+topH, width: w2, height: h2)
         sideView.image = UIImage.resizeImage("work_side")
         
         sideView.layer.shadowOffset = CGSize(width: 10, height: 10)
@@ -44,7 +50,7 @@ class EyuWorkPhotoEditViewController: UIViewController {
         view.addSubview(bottomView)
         
         view.addSubview(imageView)
-        imageView.frame = CGRect(x: 70, y: (self.view.frame.size.height-h)*0.5, width: w, height: h)
+        imageView.frame = CGRect(x: 70, y: (viewH-h)*0.5+topH, width: w, height: h)
         imageView.image = image
         
         
@@ -52,7 +58,10 @@ class EyuWorkPhotoEditViewController: UIViewController {
             self?.adjustLight(to: value)
         }
     }
-    
+    @objc
+    func navRightAction() {
+        
+    }
     private func adjustLight(to value: Int) {
         let oldImage = self.image
         let superImage = oldImage?.toCIImage()

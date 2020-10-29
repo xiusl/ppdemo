@@ -20,6 +20,7 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
 
         // Do any additional setup after loading the view.
         self.view.backgroundColor = .white
+        title = "矫正"
         
         let w = self.view.bounds.size.width
         let h = self.view.bounds.size.height
@@ -27,7 +28,11 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
         
         guard let `image` = image else { return }
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-        let frame = CGRect(x: 0, y: 0, width: w, height: h)
+        
+        
+        let topH = UIApplication.shared.statusBarFrame.size.height + 44
+        let cropH = h - topH - 103
+        let frame = CGRect(x: 0, y: topH, width: w, height: cropH)
         let v = LKPhotoCropView(image: image, frame: frame)
         
         self.view.addSubview(v)
