@@ -6,6 +6,7 @@ target 'LKPhotoKit' do
   use_frameworks!
   pod 'TZImagePickerController'
   pod 'SDWebImage'
+  pod 'SnapKit'
   # Pods for LKPhotoKit
 
 end

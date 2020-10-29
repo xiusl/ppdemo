@@ -12,6 +12,9 @@ import PhotosUI
 
 class EyuCameraViewController: UIViewController {
     
+    var accessController: UIViewController?
+    
+    var didSelectVideo: ((UIImage, URL) -> (Void))?
     
     var captureSession = AVCaptureSession()
     var previewLayer: AVCaptureVideoPreviewLayer!
@@ -448,15 +451,37 @@ class EyuCameraViewController: UIViewController {
                     PHPhotoLibrary.shared().performChanges { [weak self] in
 //                        PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: self!.videoUrl)
                         
-                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: self!.videoUrl)
+                        if let req: PHAssetChangeRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: self!.videoUrl) {
+                            
+                        }
                         
-                    } completionHandler: { (falg, error) in
+                    } completionHandler: { [weak self] (flag, error) in
                         print("写入相册\(String(describing: error))")
+                        if flag {
+                            DispatchQueue.main.async {
+                                self?.didSelectVideo?(self!.getVideoPreview(url: self!.videoUrl.absoluteString), self!.videoUrl)
+                                self?.navigationController?.popViewController(animated: true)
+                            }
+                            
+                        }
                     }
                     
                 }
             }
             
+        }
+    }
+    func getVideoPreview(url: String) -> UIImage {
+        let asset = AVURLAsset(url: URL(string: url)!)
+        let gen = AVAssetImageGenerator(asset: asset)
+        gen.appliesPreferredTrackTransform = true
+        let time: CMTime = CMTimeMakeWithSeconds(0.0, preferredTimescale: 600)
+        var actualTime: CMTime = CMTimeMakeWithSeconds(0, preferredTimescale: 0)
+        do {
+            let im = try gen.copyCGImage(at: time, actualTime: &actualTime)
+            return UIImage(cgImage: im)
+        } catch {
+            return UIImage()
         }
     }
     var canWrite: Bool = false
@@ -588,6 +613,8 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
                         let vc = EyuWorkPhotoCropViewController()
                         vc.originalPhoto = image
                         vc.image = image
+                        vc.accessController = self.accessController
+                        vc.cameraController = self
                         self.navigationController?.pushViewController(vc, animated: true)
                     }
                 }
@@ -646,7 +673,31 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
             let vc = EyuWorkPhotoCropViewController()
             vc.originalPhoto = image
             vc.image = image
+            vc.accessController = self.accessController
+            vc.cameraController = self
             self.navigationController?.pushViewController(vc, animated: true)
+        }
+        func imagePickerController(_ picker: TZImagePickerController!, didFinishPickingVideo coverImage: UIImage!, sourceAssets asset: PHAsset!) {
+            getURL(of: asset) { [weak self] (url) in
+                if let `url` = url {
+                    self?.didSelectVideo?(coverImage, url)
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            }
+        }
+        func getURL(of asset: PHAsset, completionHandler : @escaping ((_ responseURL : URL?) -> Void)){
+            if asset.mediaType == .video {
+                let options: PHVideoRequestOptions = PHVideoRequestOptions()
+                options.version = .original
+                PHImageManager.default().requestAVAsset(forVideo: asset, options: options, resultHandler: {(asset: AVAsset?, audioMix: AVAudioMix?, info: [AnyHashable : Any]?) -> Void in
+                    if let urlAsset = asset as? AVURLAsset {
+                        let localVideoUrl: URL = urlAsset.url as URL
+                        completionHandler(localVideoUrl)
+                    } else {
+                        completionHandler(nil)
+                    }
+                })
+            }
         }
     }
 

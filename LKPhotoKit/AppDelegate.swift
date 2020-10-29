@@ -24,4 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-
+let isIPad: Bool = {
+    return UIDevice.current.model == "iPad"
+}()

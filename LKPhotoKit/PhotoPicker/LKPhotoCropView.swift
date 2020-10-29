@@ -25,6 +25,11 @@ class LKPhotoCropView: UIView {
         setupLayout(with: image)
         applyStyle()
     }
+    
+    func setupImage(_ image: UIImage) {
+        imageView.image = image
+        setupLayout(with: image)
+    }
 
     private func setupLayout(with image: UIImage) {
         

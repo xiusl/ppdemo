@@ -12,6 +12,7 @@
 		BD66018A254A532700C2B48D /* KLTNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD660187254A532700C2B48D /* KLTNavigationController.m */; };
 		BD66018B254A532700C2B48D /* AnimationContoller.m in Sources */ = {isa = PBXBuildFile; fileRef = BD660189254A532700C2B48D /* AnimationContoller.m */; };
 		BD66018E254A546600C2B48D /* WorkUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66018D254A546600C2B48D /* WorkUploadViewController.swift */; };
+		BD660196254A6E0A00C2B48D /* EyuAlterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD660195254A6E0A00C2B48D /* EyuAlterSheetView.swift */; };
 		BDDFD3A32542A705009B90FA /* LkFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFD3A22542A705009B90FA /* LkFileManager.swift */; };
 		BDDFD3A72542C0CE009B90FA /* LkSomeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */; };
 		BDE5F5FB25415475003FBC50 /* LKPhotoPicker.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BDE5F5FA25415475003FBC50 /* LKPhotoPicker.bundle */; };
@@ -42,6 +43,7 @@
 		BD660188254A532700C2B48D /* KLTNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLTNavigationController.h; sourceTree = "<group>"; };
 		BD660189254A532700C2B48D /* AnimationContoller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationContoller.m; sourceTree = "<group>"; };
 		BD66018D254A546600C2B48D /* WorkUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkUploadViewController.swift; sourceTree = "<group>"; };
+		BD660195254A6E0A00C2B48D /* EyuAlterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EyuAlterSheetView.swift; sourceTree = "<group>"; };
 		BDDFD3A22542A705009B90FA /* LkFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LkFileManager.swift; sourceTree = "<group>"; };
 		BDDFD3A62542C0CE009B90FA /* LkSomeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LkSomeEx.swift; sourceTree = "<group>"; };
 		BDE5F5FA25415475003FBC50 /* LKPhotoPicker.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LKPhotoPicker.bundle; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				BD660185254A532700C2B48D /* KLTAnimateNav */,
 				BDE916AE254006830013888B /* PhotoPicker */,
 				BD660182254A52F800C2B48D /* BaseNavigationViewController.swift */,
+				BD660195254A6E0A00C2B48D /* EyuAlterSheetView.swift */,
 			);
 			path = LKPhotoKit;
 			sourceTree = "<group>";
@@ -288,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDE916B7254006830013888B /* LKPhotoCropViewController.swift in Sources */,
+				BD660196254A6E0A00C2B48D /* EyuAlterSheetView.swift in Sources */,
 				BDE916B5254006830013888B /* LKPhotoCropView.swift in Sources */,
 				BDDFD3A32542A705009B90FA /* LkFileManager.swift in Sources */,
 				BD66018A254A532700C2B48D /* KLTNavigationController.m in Sources */,

@@ -10,6 +10,9 @@ import UIKit
 class EyuWorkPhotoEditViewController: UIViewController {
 
     var image: UIImage!
+    var cropController: UIViewController?
+    var accessController: UIViewController?
+    var cameraController: UIViewController?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,12 +21,12 @@ class EyuWorkPhotoEditViewController: UIViewController {
         title = "装裱"
         
         let navRightItem = UIBarButtonItem(title: "下一步", style: .plain, target: self, action: #selector(navRightAction))
-        self.navigationController?.navigationItem.rightBarButtonItem = navRightItem
+        self.navigationItem.rightBarButtonItem = navRightItem
         
         let imageSize = image.size
         
-        let w = (self.view.frame.size.width - 140)
-        let w2 = (self.view.frame.size.width - 100)
+        let w = isIPad ? 360 : (self.view.frame.size.width - 140)
+        let w2 = isIPad ? 400 : (self.view.frame.size.width - 100)
         var h = w
         var h2 = w2
         if imageSize.width < imageSize.height {
@@ -40,27 +43,46 @@ class EyuWorkPhotoEditViewController: UIViewController {
         
         
         view.addSubview(sideView)
-        sideView.frame = CGRect(x: 50, y: (viewH-h2)*0.5+topH, width: w2, height: h2)
+        sideView.frame = CGRect(x: (self.view.frame.size.width-w2)*0.5, y: (viewH-h2)*0.5+topH, width: w2, height: h2)
         sideView.image = UIImage.resizeImage("work_side")
         
         sideView.layer.shadowOffset = CGSize(width: 10, height: 10)
         sideView.layer.shadowColor = UIColor(white: 0, alpha: 0.3).cgColor
         sideView.layer.shadowOpacity = 1
     
-        view.addSubview(bottomView)
-        
-        view.addSubview(imageView)
-        imageView.frame = CGRect(x: 70, y: (viewH-h)*0.5+topH, width: w, height: h)
+        sideView.addSubview(imageView)
+        imageView.frame = CGRect(x: 20, y: 20, width: w, height: h)
         imageView.image = image
         
-        
+        view.addSubview(bottomView)
         bottomView.setup { [weak self] (value) in
             self?.adjustLight(to: value)
         }
     }
     @objc
     func navRightAction() {
-        
+        if let image = getNewImage() {
+            
+            let workVc = WorkUploadViewController()
+            workVc.image = image
+            workVc.originalImage = self.image
+            workVc.cropController = self.cropController
+            workVc.accessController = self.accessController
+            workVc.cameraController = self.cameraController
+            self.navigationController?.pushViewController(workVc, animated: true)
+        } else {
+            print("图片生成失败")
+        }
+            
+       
+    }
+    private func getNewImage() -> UIImage? {
+        UIGraphicsBeginImageContext(sideView.bounds.size)
+        guard let ctx = UIGraphicsGetCurrentContext() else { return nil }
+        sideView.layer.render(in: ctx)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img
     }
     private func adjustLight(to value: Int) {
         let oldImage = self.image

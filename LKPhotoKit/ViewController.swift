@@ -66,6 +66,7 @@ class ViewController: UIViewController {
     @objc
     func button3ClickAction() {
         let vc = EyuCameraViewController()
+        vc.accessController = self
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

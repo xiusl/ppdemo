@@ -1,3 +1,4 @@
 ${PODS_ROOT}/Target Support Files/Pods-LKPhotoKit/Pods-LKPhotoKit-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework
+${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
 ${BUILT_PRODUCTS_DIR}/TZImagePickerController/TZImagePickerController.framework

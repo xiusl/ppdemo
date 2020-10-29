@@ -13,6 +13,8 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
     var asster: LKAsset?
     var image: UIImage?
     var originalPhoto: UIImage!
+    var accessController: UIViewController?
+    var cameraController: UIViewController?
     
     
     override func viewDidLoad() {
@@ -27,7 +29,6 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
         
         
         guard let `image` = image else { return }
-        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         
         
         let topH = UIApplication.shared.statusBarFrame.size.height + 44
@@ -43,6 +44,9 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
         self.setupGestureRecognizers(v: v)
         
         self.vv = v
+    }
+    func setupImage(_ image: UIImage) {
+        self.vv?.setupImage(image)
     }
     
     var vv: LKPhotoCropView?
@@ -109,6 +113,9 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
     func originalButtonAction() {
         let vc = EyuWorkPhotoEditViewController()
         vc.image = image!
+        vc.accessController = self.accessController
+        vc.cropController = self
+        vc.cameraController = self.cameraController
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc
@@ -133,12 +140,12 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
             let imageRef = cgImage.cropping(to: scaledCropRect) {
             let croppedImage = UIImage(cgImage: imageRef)
             didFinishCropping?(croppedImage)
-        
-            
-            UIImageWriteToSavedPhotosAlbum(croppedImage, nil, nil, nil)
             
             let vc = EyuWorkPhotoEditViewController()
             vc.image = croppedImage
+            vc.accessController = self.accessController
+            vc.cropController = self
+            vc.cameraController = self.cameraController
             self.navigationController?.pushViewController(vc, animated: true)
         }
 //        self.navigationController?.popViewController(animated: true)
