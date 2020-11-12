@@ -21,6 +21,8 @@ class EyuCameraViewController: UIViewController {
     var captureDevice: AVCaptureDevice!
     var microphoneDevice: AVCaptureDevice!
     
+    var photoOutput: AVCapturePhotoOutput = AVCapturePhotoOutput()
+    
     var audioDeviceInput: AVCaptureDeviceInput?
     var videoDeviceInput: AVCaptureDeviceInput?
     
@@ -60,18 +62,11 @@ class EyuCameraViewController: UIViewController {
         super.viewWillDisappear(animated)
         navBarBgView?.alpha = 1
     }
-    
+    var aWidth: CGFloat = 100
     override func viewDidLoad() {
+        self.aWidth = self.view.frame.size.width
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-        let button = UIButton()
-        button.titleLabel?.font = .systemFont(ofSize: 14)
-        button.setTitle("关闭", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.addTarget(self, action: #selector(closeController), for: .touchUpInside)
-        button.frame = CGRect(x: 16, y: 64, width: 80, height: 36)
-        view.addSubview(button)
         
         
         let captureTapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AutoFocusGesture(_:)))
@@ -80,23 +75,78 @@ class EyuCameraViewController: UIViewController {
         self.view.addGestureRecognizer(captureTapGesture)
         
         
-        setupViews()
+        
         setupPreviewLayer()
+        setupViews()
         configSession()
         requestAuthorization()
         
         if isVideo {
             //            setupAssetWriter()
         }
+        
+        var width: CGFloat = 44
+        if isIPad {
+            width = 80
+        }
+        let selectView = EyuPhotoCropSizeSelectView()
+        selectView.frame = CGRect(x: 0, y: 0, width: width*3, height: 44)
+        self.navigationItem.titleView = selectView
+        
+        selectView.sizeScaleChange = { value in
+            self.resizePreview(scale: value)
+        }
+    }
+    var scale: CGFloat = 4/3.0
+    func resizePreview(scale: CGFloat) {
+        var top = UIApplication.shared.statusBarFrame.size.height + 44
+        self.scale = scale
+        
+        var width = aW
+        let screenH = UIScreen.main.bounds.size.height
+        let screenW = UIScreen.main.bounds.size.height
+        let contentH = screenH - top - self.bottomView.bounds.size.height
+        
+        var h = CGFloat(Int(width / scale))
+        var left: CGFloat = 0
+        if h > contentH { //
+            if h <= screenH {
+                top = 0
+            } else {
+                top = 0
+                h = screenH
+                width = h * scale
+                left = (screenW - width)/2
+            }
+        } else {
+            top = top + (contentH - h) / 2
+        }
+        
+        
+        
+        if scale == 1 {
+            self.previewLayer.frame = CGRect(x: left, y: top, width: width, height: h)
+        } else if scale < 1 {
+            self.previewLayer.frame = CGRect(x: left, y: top, width: width, height: h)
+        } else {
+            self.previewLayer.frame = CGRect(x: left, y: top, width: width, height: h)
+        }
     }
     
     func configSession() {
         captureSession.sessionPreset = AVCaptureSession.Preset.high
         
+        
+
     }
+    let aW = UIScreen.main.bounds.size.width
+    let aH = UIScreen.main.bounds.size.width * 3 / 4
     func setupPreviewLayer() {
         previewLayer = AVCaptureVideoPreviewLayer(sessionWithNoConnection: captureSession)
-        self.previewLayer.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height-167)
+//        self.previewLayer.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height-167)
+        
+        
+        self.previewLayer.frame = CGRect(x: 0, y: 160, width: aW, height: aH)
         self.previewLayer.videoGravity = .resizeAspectFill
         self.previewLayer.masksToBounds = true
         self.view.layer.addSublayer(previewLayer)
@@ -109,11 +159,15 @@ class EyuCameraViewController: UIViewController {
         bottomView.addSubview(swapCameraButton)
         bottomView.addSubview(takePhotoButton)
         bottomView.addSubview(guideButton)
+        
+        imageView.frame = CGRect(x: 10, y: 10, width: 100, height: 100)
+        imageView.contentMode = .scaleAspectFit
+        bottomView.addSubview(imageView)
     }
     private lazy var bottomView: UIView = {
         let view = UIView()
         view.frame = CGRect(x: 0, y: self.view.frame.size.height-167, width: self.view.frame.size.width, height: 157)
-        view.backgroundColor = .white
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -175,7 +229,19 @@ class EyuCameraViewController: UIViewController {
                 self.timer = nil
             }
         } else {
-            takePhoto = true
+            let width = self.previewLayer.bounds.size.width
+            let height = self.previewLayer.bounds.size.height
+            
+           
+            let settings = AVCapturePhotoSettings()
+            let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first!
+            let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType,
+                        kCVPixelBufferWidthKey as String: width,
+                                           kCVPixelBufferHeightKey as String: height] as [String : Any]
+
+            settings.previewPhotoFormat = previewFormat
+            
+            photoOutput.capturePhoto(with: settings, delegate: self)
         }
     }
     @objc
@@ -377,6 +443,14 @@ class EyuCameraViewController: UIViewController {
         }
         
         videoDataOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
+        
+        
+        
+        if captureSession.canAddOutput(photoOutput) {
+            captureSession.addOutput(photoOutput)
+            photoOutput.isHighResolutionCaptureEnabled = true
+        }
+        
         captureSession.commitConfiguration()
         if !captureSession.isRunning {
             captureSession.startRunning()
@@ -392,10 +466,11 @@ class EyuCameraViewController: UIViewController {
         do {
             assetWriter = try AVAssetWriter(url: self.videoUrl, fileType: .mp4)
             
-
+            let width = self.previewLayer.bounds.size.width
+            let height = self.previewLayer.bounds.size.height
             
             let compressionProperties: Dictionary<String, Any> = [
-                AVVideoAverageBitRateKey: 6.0 * 1280*720,
+                AVVideoAverageBitRateKey: 6.0 * width*height,
                 AVVideoExpectedSourceFrameRateKey: 30,
                 AVVideoMaxKeyFrameIntervalKey: 30,
                 AVVideoProfileLevelKey: AVVideoProfileLevelH264BaselineAutoLevel
@@ -403,8 +478,8 @@ class EyuCameraViewController: UIViewController {
             let videoSetting: Dictionary<String, Any> = [
                 AVVideoCodecKey: AVVideoCodecH264,
                 AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
-                AVVideoWidthKey: 1280*2,
-                AVVideoHeightKey: 720*2,
+                AVVideoWidthKey: width*2,
+                AVVideoHeightKey: height*2,
                 AVVideoCompressionPropertiesKey: compressionProperties
             ]
             
@@ -628,15 +703,26 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
         if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
             let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
             let context = CIContext()
-            let imageRect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
             
+            let bWidth =  CVPixelBufferGetWidth(pixelBuffer)
+            let bHeight =  CVPixelBufferGetHeight(pixelBuffer)
+            let imageRect = CGRect(x: 0, y: 0, width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
             if let image = context.createCGImage(ciImage, from: imageRect) {
-                return UIImage(cgImage: image, scale: UIScreen.main.scale, orientation: orientation)
-                
+//                if let aimage = image.cropping(to: CGRect(x: 0, y: 100, width: aWidth, height: aWidth)) {
+                    return UIImage(cgImage: image, scale: UIScreen.main.scale, orientation: orientation)
+//                }
             }
             
         }
         return nil
+    }
+    func calculateAspectRatioCrop(cgImage : CGImage, aspectRatio: CGFloat) -> CGRect {
+        var width = CGFloat(cgImage.width)
+        var height = CGFloat(cgImage.height)
+        
+        
+        
+        return CGRect(x: 0, y: 100, width: 375, height: 375)
     }
     
     @objc func updateProgress() {
@@ -701,3 +787,269 @@ extension EyuCameraViewController: AVCaptureVideoDataOutputSampleBufferDelegate,
         }
     }
 
+extension EyuCameraViewController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ captureOutput: AVCapturePhotoOutput,  didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,  previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings:  AVCaptureResolvedPhotoSettings, bracketSettings:   AVCaptureBracketedStillImageSettings?, error: Error?) {
+            
+            if let error = error {
+                print("-----error occure : \(error.localizedDescription)")
+            }
+            
+            if  let sampleBuffer = photoSampleBuffer,
+                let previewBuffer = previewPhotoSampleBuffer,
+                let dataImage =  AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer:  sampleBuffer, previewPhotoSampleBuffer: previewBuffer) {
+                print(UIImage(data: dataImage)?.size as Any)
+                
+                let dataProvider = CGDataProvider(data: dataImage as CFData)
+                let cgImageRef: CGImage! = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+                let image = UIImage(cgImage: cgImageRef, scale: 1.0, orientation: UIImage.Orientation.right)
+//
+//                self.session.stopRunning()
+//                self.imgView.image = image
+                let sImage = self.cropImageToSquare(image)
+                
+                self.imageView.image = sImage
+                self.imageView.isHidden = false
+                
+            } else {
+                print("some error here")
+            }
+        }
+    
+    
+    func cropImageToSquare(_ image: UIImage) -> UIImage {
+                let orientation: UIDeviceOrientation = UIDevice.current.orientation
+                var imageWidth = image.size.width
+                var imageHeight = image.size.height
+                switch orientation {
+                case .landscapeLeft, .landscapeRight:
+                    // Swap width and height if orientation is landscape
+                    imageWidth = image.size.height
+                    imageHeight = image.size.width
+                default:
+                    break
+                }
+
+                // The center coordinate along Y axis
+                let rcy = imageHeight * 0.5
+                
+                var h = imageWidth *  3 / 4
+        
+        if self.scale == 1 {
+            h = imageWidth
+        } else if self.scale > 1 {
+            h = imageWidth *  3 / 4
+        } else {
+            h = imageWidth *  4 / 3
+        }
+        
+        
+                let rect = CGRect(x: rcy - h * 0.5, y: 0, width: h, height: imageWidth)
+                let imageRef = image.cgImage?.cropping(to: rect)
+                return UIImage(cgImage: imageRef!, scale: 1.0, orientation: image.imageOrientation)
+            }
+
+
+    // Used when image is taken from the front camera.
+    func flipImage(image: UIImage!) -> UIImage! {
+            let imageSize: CGSize = image.size
+            UIGraphicsBeginImageContextWithOptions(imageSize, true, 1.0)
+            let ctx = UIGraphicsGetCurrentContext()!
+            ctx.rotate(by: CGFloat(Double.pi/2.0))
+            ctx.translateBy(x: 0, y: -imageSize.width)
+            ctx.scaleBy(x: imageSize.height/imageSize.width, y: imageSize.width/imageSize.height)
+            ctx.draw(image.cgImage!, in: CGRect(x: 0.0,
+                                                y: 0.0,
+                                                width: imageSize.width,
+                                                height: imageSize.height))
+            let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            return newImage
+    }
+}
+
+
+
+class EyuPhotoCropSizeSelectView: UIView {
+    private var font = UIFont.systemFont(ofSize: 9, weight: .bold)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        if isIPad {
+            font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        }
+        setupViews()
+    }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    var currentItem: EyuPhotoCropSizeSelectViewItem?
+    var sizeScaleChange: ((CGFloat) -> ())?
+    func setupViews() {
+//        self.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(button34)
+        addSubview(button43)
+        addSubview(button1)
+        
+        var width: CGFloat = 44
+        if isIPad {
+            width = 80
+        }
+        
+        button34.snp.makeConstraints { (make) in
+            make.left.top.equalToSuperview()
+            make.width.equalTo(width)
+            make.height.equalTo(44)
+        }
+        button43.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            make.left.equalTo(button34.snp.right)
+            make.width.equalTo(width)
+            make.height.equalTo(44)
+        }
+        button1.snp.makeConstraints { (make) in
+            make.right.top.equalToSuperview()
+            make.left.equalTo(button43.snp.right)
+            make.width.equalTo(width)
+            make.height.equalTo(44)
+        }
+        
+        
+        button34.isSelected = true
+        currentItem = button34
+    }
+    lazy var button34: EyuPhotoCropSizeSelectViewItem = {
+        let button = EyuPhotoCropSizeSelectViewItem()
+        button.setTitle("3:4")
+        button.setTitleColor(.black)
+        button.titleLabel.font = font
+        button.setupScale(0.2)
+        let tapGest = UITapGestureRecognizer(target: self, action: #selector(buttonClickAction(_:)))
+        button.addGestureRecognizer(tapGest)
+        return button
+    }()
+    lazy var button43: EyuPhotoCropSizeSelectViewItem = {
+        let button = EyuPhotoCropSizeSelectViewItem()
+        button.setTitle("4:3")
+        button.setTitleColor(.black)
+        button.titleLabel.font = font
+        button.setupScale(1.2)
+        let tapGest = UITapGestureRecognizer(target: self, action: #selector(buttonClickAction(_:)))
+        button.addGestureRecognizer(tapGest)
+        return button
+    }()
+    lazy var button1: EyuPhotoCropSizeSelectViewItem = {
+        let button = EyuPhotoCropSizeSelectViewItem()
+        button.setTitle("1:1")
+        button.setTitleColor(.black)
+        button.titleLabel.font = font
+        button.setupScale(1)
+        let tapGest = UITapGestureRecognizer(target: self, action: #selector(buttonClickAction(_:)))
+        button.addGestureRecognizer(tapGest)
+        return button
+    }()
+    @objc
+    private func buttonClickAction(_ gest: UITapGestureRecognizer) {
+        guard let button = gest.view as? EyuPhotoCropSizeSelectViewItem else { return }
+        currentItem?.isSelected = false
+        button.isSelected = true
+        currentItem = button
+        
+        let title = button.titleLabel.text
+        if title == "3:4" {
+            sizeScaleChange?(CGFloat(3/4.0))
+        } else if title == "4:3" {
+            sizeScaleChange?(CGFloat(4/3.0))
+        } else if title == "1:1" {
+            sizeScaleChange?(1.0)
+        }
+    }
+//    override var intrinsicContentSize: CGSize {
+//        get {
+//            var width: CGFloat = 44 * kRatioWidth
+//            if isIPad {
+//                width = 80
+//            }
+//            return CGSize(width: width*3, height: 44)
+//        }
+//    }
+}
+
+
+class EyuPhotoCropSizeSelectViewItem: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.addSubview(borderView)
+        self.addSubview(titleLabel)
+        
+        titleLabel.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+    }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    func setupScale(_ scale: CGFloat) {
+        self.titleLabel.sizeToFit()
+        let titleWidth = self.titleLabel.bounds.size.width + 4
+        if scale < 1 {
+            self.borderView.bounds = CGRect(x: 0, y: 0, width: titleWidth, height: titleWidth*4/3)
+        } else if scale > 1 {
+            self.borderView.bounds = CGRect(x: 0, y: 0, width: titleWidth, height: titleWidth*3/4)
+        } else {
+            self.borderView.bounds = CGRect(x: 0, y: 0, width: titleWidth, height: titleWidth)
+        }
+        var width: CGFloat = 44
+        if isIPad {
+            width = 80
+        }
+        
+        self.borderView.center = CGPoint(x: width/2.0, y: 22)
+    }
+    lazy var borderView: UIView = {
+        let view = UIView()
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.cornerRadius = 1
+        view.clipsToBounds = true
+        return view
+    }()
+    lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        return label
+    }()
+    func setTitle(_ title: String) {
+        self.titleLabel.text = title
+    }
+    func setTitleColor(_ color: UIColor) {
+        self.titleLabel.textColor = color
+    }
+//    override func setTitle(_ title: String?, for state: UIControlState) {
+//        super.setTitle(title, for: state)
+//
+//        self.titleLabel?.sizeToFit()
+//        let titleWidth = (self.titleLabel?.bounds.size.width ?? 16)
+//
+//        if title == "3:4" {
+//            self.borderView().bounds = CGRect(x: 0, y: 0, width: titleWidth, height: titleWidth*4/3)
+//        } else if title == "4:3" {
+//            self.borderView().bounds = CGRect(x: 0, y: 0, width: titleWidth, height: titleWidth*3/4)
+//        } else if title == "1:1" {
+//            self.borderView().bounds = CGRect(x: 0, y: 0, width: titleWidth, height: titleWidth)
+//        }
+//
+//        var width: CGFloat = 44 * kRatioWidth
+//        if isIPad {
+//            width = 80
+//        }
+//
+//        self.borderView().center = CGPoint(x: width/2.0, y: 22)
+//    }
+    
+    var isSelected: Bool = false {
+        didSet {
+            borderView.layer.borderColor = isSelected ? UIColor.red.cgColor : UIColor.black.cgColor
+            self.titleLabel.textColor = isSelected ? UIColor.red : UIColor.black
+        }
+    }
+
+}

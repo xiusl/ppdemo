@@ -83,7 +83,12 @@ class ViewController: UIViewController {
         
         
         assert(compareVersion("1.1", version2: "1.1") == 0, "soso")
+        
+        
+        assert(compareVersion("1.2.1", version2: "") == 1, "soso")
     }
+    
+
     
     private func compareVersion(_ version1: String, version2: String) -> Int {
         // v1 > v2: 1
