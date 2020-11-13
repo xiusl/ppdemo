@@ -9,6 +9,7 @@ import UIKit
 import AVFoundation
 import TZImagePickerController
 import PhotosUI
+import CoreMotion
 
 class EyuCameraViewController: UIViewController {
     
@@ -63,6 +64,8 @@ class EyuCameraViewController: UIViewController {
         navBarBgView?.alpha = 1
     }
     var aWidth: CGFloat = 100
+    let motionManager = CMMotionManager()
+    var motionTimer: Timer!
     override func viewDidLoad() {
         self.aWidth = self.view.frame.size.width
         super.viewDidLoad()
@@ -96,7 +99,54 @@ class EyuCameraViewController: UIViewController {
         selectView.sizeScaleChange = { value in
             self.resizePreview(scale: value)
         }
+        
+//        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+//        NotificationCenter.default.addObserver(self, selector: #selector(deviceRoateNot), name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+        
+        motionManager.startAccelerometerUpdates()
+        motionManager.startGyroUpdates()
+        motionManager.startMagnetometerUpdates()
+        motionManager.startDeviceMotionUpdates()
+        
+        motionManager.startAccelerometerUpdates(to: OperationQueue.current!) { [weak self] (accelerometerData, error) in
+            if error == nil {
+                self?.outputAccelertionData((accelerometerData?.acceleration)!)
+            }
+        }
+
     }
+    func outputAccelertionData(_ acceleration: CMAcceleration) {
+       var orientationNew: UIDeviceOrientation
+       if acceleration.x >= 0.75 {
+           orientationNew = .landscapeLeft
+           print("landscapeLeft")
+       }
+       else if acceleration.x <= -0.75 {
+           orientationNew = .landscapeRight
+           print("landscapeRight")
+       }
+       else if acceleration.y <= -0.75 {
+           orientationNew = .portrait
+           print("portrait")
+
+       }
+       else if acceleration.y >= 0.75 {
+           orientationNew = .portraitUpsideDown
+           print("portraitUpsideDown")
+       }
+       else {
+           // Consider same as last time
+           return
+       }
+
+       if orientationNew == orientationLast {
+           return
+       }
+       orientationLast = orientationNew
+   }
+    var orientationLast = UIDeviceOrientation.portrait
+    
     var scale: CGFloat = 4/3.0
     func resizePreview(scale: CGFloat) {
         var top = UIApplication.shared.statusBarFrame.size.height + 44
@@ -801,7 +851,7 @@ extension EyuCameraViewController: AVCapturePhotoCaptureDelegate {
                 
                 let dataProvider = CGDataProvider(data: dataImage as CFData)
                 let cgImageRef: CGImage! = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
-                let image = UIImage(cgImage: cgImageRef, scale: 1.0, orientation: UIImage.Orientation.right)
+                let image = UIImage(cgImage: cgImageRef, scale: 1.0, orientation: .right)
 //
 //                self.session.stopRunning()
 //                self.imgView.image = image
@@ -810,11 +860,44 @@ extension EyuCameraViewController: AVCapturePhotoCaptureDelegate {
                 self.imageView.image = sImage
                 self.imageView.isHidden = false
                 
+                
+                DispatchQueue.main.async {
+                    let vc = EyuWorkPhotoCropViewController()
+                    vc.originalPhoto = sImage
+                    vc.image = sImage
+                    vc.accessController = self.accessController
+                    vc.cameraController = self
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+                
             } else {
                 print("some error here")
             }
         }
-    
+    func currentVideoOrientation() -> AVCaptureVideoOrientation {
+        switch UIDevice.current.orientation {
+        case .portrait:
+            return .portrait
+        case .landscapeLeft:
+            return .landscapeLeft
+        case .landscapeRight:
+            return .landscapeRight
+        default:
+            return .portrait
+        }
+    }
+    func currentImageOrientation() -> UIImage.Orientation {
+        switch self.orientationLast {
+        case .portrait:
+            return .up
+        case .landscapeLeft:
+            return .left
+        case .landscapeRight:
+            return .right
+        default:
+            return .up
+        }
+    }
     
     func cropImageToSquare(_ image: UIImage) -> UIImage {
                 let orientation: UIDeviceOrientation = UIDevice.current.orientation
@@ -845,9 +928,23 @@ extension EyuCameraViewController: AVCapturePhotoCaptureDelegate {
         
                 let rect = CGRect(x: rcy - h * 0.5, y: 0, width: h, height: imageWidth)
                 let imageRef = image.cgImage?.cropping(to: rect)
-                return UIImage(cgImage: imageRef!, scale: 1.0, orientation: image.imageOrientation)
-            }
+                let nImage = UIImage(cgImage: imageRef!, scale: 1.0, orientation: image.imageOrientation)
+                return rotateImage(nImage)
+    }
 
+    func rotateImage(_ image: UIImage) -> UIImage {
+        switch self.orientationLast {
+        case .portrait:
+            return image
+        case .landscapeLeft:
+            return UIImage(cgImage: image.cgImage!, scale: 1, orientation: .down)
+        case .landscapeRight:
+            return UIImage(cgImage: image.cgImage!, scale: 1, orientation: .up)
+        default:
+            return image
+        }
+        
+    }
 
     // Used when image is taken from the front camera.
     func flipImage(image: UIImage!) -> UIImage! {

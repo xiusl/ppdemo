@@ -136,7 +136,8 @@ class EyuWorkPhotoCropViewController: UIViewController, UIScrollViewDelegate {
                                     y: yCrop * scaleRatio,
                                     width: widthCrop * scaleRatio,
                                     height: heightCrop * scaleRatio)
-        if let cgImage = image.toCIImage()?.toCGImage(),
+        
+        if let cgImage = image.fixOrientation().toCIImage()?.toCGImage(),
             let imageRef = cgImage.cropping(to: scaledCropRect) {
             let croppedImage = UIImage(cgImage: imageRef)
             didFinishCropping?(croppedImage)
@@ -323,6 +324,134 @@ extension UIImage {
     func toCIImage() -> CIImage? {
         return self.ciImage ?? CIImage(cgImage: self.cgImage!)
     }
+    
+    func fixOrientation() -> UIImage {
+        if self.imageOrientation == .up { return self }
+        
+        var transform = CGAffineTransform.identity
+        
+        switch self.imageOrientation {
+        case .down, .downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(Double.pi))
+        case .left, .leftMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.rotated(by: CGFloat(Double.pi) * 0.5)
+        case .right, .rightMirrored:
+            transform = transform.translatedBy(x: 0, y: self.size.height)
+            transform = transform.rotated(by: -CGFloat(Double.pi) * 0.5)
+        default:
+            break
+        }
+        
+        switch self.imageOrientation {
+        case .upMirrored, .downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        case .leftMirrored, .rightMirrored:
+            transform = transform.translatedBy(x: self.size.height, y: 0)
+            transform = transform.scaledBy(x: -1, y: 1)
+        default:
+            break
+        }
+        
+        let ctx = CGContext(data: nil,
+                            width: Int(self.size.width),
+                            height: Int(self.size.height),
+                            bitsPerComponent: self.cgImage!.bitsPerComponent,
+                            bytesPerRow: 0,
+                            space: self.cgImage!.colorSpace!,
+                            bitmapInfo: self.cgImage!.bitmapInfo.rawValue)
+        ctx?.concatenate(transform)
+        
+        switch self.imageOrientation {
+        case .left, .leftMirrored, .right, .rightMirrored:
+            ctx?.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: size.height, height: size.width))
+        default:
+            ctx?.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        }
+        let cgImage = (ctx?.makeImage())!
+        let image = UIImage(cgImage: cgImage)
+        return image
+        
+//        var ctx = CGBitmapContextCreate(NULL, self.size.width, self.size.height,
+//                                                 CGImageGetBitsPerComponent(self.CGImage), 0,
+//                                                 CGImageGetColorSpace(self.CGImage),
+//                                                 CGImageGetBitmapInfo(self.CGImage));
+    }
+    /*
+     - (UIImage *)fixOrientation {
+
+         // No-op if the orientation is already correct
+         if (self.imageOrientation == UIImageOrientationUp) return self;
+
+         // We need to calculate the proper transformation to make the image upright.
+         // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+         CGAffineTransform transform = CGAffineTransformIdentity;
+
+         switch (self.imageOrientation) {
+             case UIImageOrientationDown:
+             case UIImageOrientationDownMirrored:
+                 transform = CGAffineTransformTranslate(transform, self.size.width, self.size.height);
+                 transform = CGAffineTransformRotate(transform, M_PI);
+                 break;
+
+             case UIImageOrientationLeft:
+             case UIImageOrientationLeftMirrored:
+                 transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+                 transform = CGAffineTransformRotate(transform, M_PI_2);
+                 break;
+
+             case UIImageOrientationRight:
+             case UIImageOrientationRightMirrored:
+                 transform = CGAffineTransformTranslate(transform, 0, self.size.height);
+                 transform = CGAffineTransformRotate(transform, -M_PI_2);
+                 break;
+         }
+
+         switch (self.imageOrientation) {
+             case UIImageOrientationUpMirrored:
+             case UIImageOrientationDownMirrored:
+                 transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+                 transform = CGAffineTransformScale(transform, -1, 1);
+                 break;
+
+             case UIImageOrientationLeftMirrored:
+             case UIImageOrientationRightMirrored:
+                 transform = CGAffineTransformTranslate(transform, self.size.height, 0);
+                 transform = CGAffineTransformScale(transform, -1, 1);
+                 break;
+         }
+
+         // Now we draw the underlying CGImage into a new context, applying the transform
+         // calculated above.
+         CGContextRef ctx = CGBitmapContextCreate(NULL, self.size.width, self.size.height,
+                                                  CGImageGetBitsPerComponent(self.CGImage), 0,
+                                                  CGImageGetColorSpace(self.CGImage),
+                                                  CGImageGetBitmapInfo(self.CGImage));
+         CGContextConcatCTM(ctx, transform);
+         switch (self.imageOrientation) {
+             case UIImageOrientationLeft:
+             case UIImageOrientationLeftMirrored:
+             case UIImageOrientationRight:
+             case UIImageOrientationRightMirrored:
+                 // Grr...
+                 CGContextDrawImage(ctx, CGRectMake(0,0,self.size.height,self.size.width), self.CGImage);
+                 break;
+
+             default:
+                 CGContextDrawImage(ctx, CGRectMake(0,0,self.size.width,self.size.height), self.CGImage);
+                 break;
+         }
+
+         // And now we just create a new UIImage from the drawing context
+         CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+         UIImage *img = [UIImage imageWithCGImage:cgimg];
+         CGContextRelease(ctx);
+         CGImageRelease(cgimg);
+         return img;
+     }
+     */
 }
 
 internal extension CIImage {
