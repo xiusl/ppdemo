@@ -516,9 +516,9 @@ class EyuCameraViewController: UIViewController {
         do {
             assetWriter = try AVAssetWriter(url: self.videoUrl, fileType: .mp4)
             
-            let width = self.previewLayer.bounds.size.width
-            let height = self.previewLayer.bounds.size.height
-            
+            var width = self.previewLayer.bounds.size.width
+            var height = self.previewLayer.bounds.size.height
+
             let compressionProperties: Dictionary<String, Any> = [
                 AVVideoAverageBitRateKey: 6.0 * width*height,
                 AVVideoExpectedSourceFrameRateKey: 30,
@@ -528,8 +528,8 @@ class EyuCameraViewController: UIViewController {
             let videoSetting: Dictionary<String, Any> = [
                 AVVideoCodecKey: AVVideoCodecH264,
                 AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
-                AVVideoWidthKey: width*2,
-                AVVideoHeightKey: height*2,
+                AVVideoWidthKey: height*2,
+                AVVideoHeightKey: width*2,
                 AVVideoCompressionPropertiesKey: compressionProperties
             ]
             
@@ -543,8 +543,14 @@ class EyuCameraViewController: UIViewController {
             
             assetWriterVideoInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSetting)
             assetWriterVideoInput!.expectsMediaDataInRealTime = true
-            assetWriterVideoInput!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi * 0.5))
             
+            if self.orientationLast == .landscapeRight{
+//                assetWriterVideoInput!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi * 0.5))
+            } else if self.orientationLast == .landscapeLeft {
+                assetWriterVideoInput!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+            } else {
+                assetWriterVideoInput!.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi * 0.5))
+            }
             
             
             assetWriterAudioInput = AVAssetWriterInput(mediaType: .audio, outputSettings: audioSetting)
@@ -903,14 +909,14 @@ extension EyuCameraViewController: AVCapturePhotoCaptureDelegate {
                 let orientation: UIDeviceOrientation = UIDevice.current.orientation
                 var imageWidth = image.size.width
                 var imageHeight = image.size.height
-                switch orientation {
-                case .landscapeLeft, .landscapeRight:
-                    // Swap width and height if orientation is landscape
-                    imageWidth = image.size.height
-                    imageHeight = image.size.width
-                default:
-                    break
-                }
+//                switch orientation {
+//                case .landscape Left, .landscapeRight:
+//                    // Swap width and height if orientation is landscape
+//                    imageWidth = image.size.height
+//                    imageHeight = image.size.width
+//                default:
+//                    break
+//                }
 
                 // The center coordinate along Y axis
                 let rcy = imageHeight * 0.5
